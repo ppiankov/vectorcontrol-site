@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Context Decay in Long AI Sessions</title>
+  <meta name="description" content="Session tokendynamics and the infrastructure gap in collaborative reasoning. Why long AI coding sessions silently degrade — and what to do about it.">
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Context Decay in Long AI Sessions">
+  <meta property="og:description" content="Session tokendynamics and the infrastructure gap in collaborative reasoning. Why long AI coding sessions silently degrade.">
+  <meta property="og:url" content="https://vectorcontrol.dev">
+  <meta property="og:site_name" content="vectorcontrol.dev">
+  <!-- Twitter/X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Context Decay in Long AI Sessions">
+  <meta name="twitter:description" content="Session tokendynamics and the infrastructure gap in collaborative reasoning. Why long AI coding sessions silently degrade.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0E1116;
+      color: #CDD6E0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.7;
+      padding: 2rem 1.5rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    h1 { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.25rem; line-height: 1.3; }
+    h2 { font-size: 1.1rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 0.75rem; }
+    p { margin-bottom: 1rem; color: #CDD6E0; }
+    a { color: #CDD6E0; }
+    .meta { color: #7C8590; font-size: 0.85rem; margin-bottom: 2rem; }
+    .subtitle { color: #7C8590; font-size: 0.9rem; font-style: italic; margin-bottom: 2rem; }
+    .highlight { color: #E6EDF3; }
+    .separator { border: none; border-top: 1px solid #3B414A; margin: 2rem 0; }
+    strong { color: #E6EDF3; font-weight: 600; }
+    em { color: #CDD6E0; }
+
+    /* Standalone thesis line */
+    .thesis { color: #E6EDF3; font-weight: 600; margin: 1.5rem 0; }
+
+    /* Stat blocks — observed results */
+    .stat { font-size: 1rem; font-weight: 600; color: #E6EDF3; display: block; margin: 1rem 0; padding: 0.75rem 1rem; border-left: 2px solid #3B414A; }
+    .stat em { color: #7C8590; font-weight: 400; font-style: normal; font-size: 0.85rem; display: block; margin-top: 0.2rem; }
+
+    /* Code / ASCII diagrams */
+    pre {
+      background: #161B22;
+      border: 1px solid #3B414A;
+      border-radius: 4px;
+      padding: 1rem;
+      font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      color: #CDD6E0;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.9rem;
+    }
+    th {
+      text-align: left;
+      color: #7C8590;
+      font-weight: 400;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.4rem 0.75rem 0.4rem 0;
+      border-bottom: 1px solid #3B414A;
+    }
+    td {
+      padding: 0.5rem 0.75rem 0.5rem 0;
+      border-bottom: 1px solid #1C2128;
+      color: #CDD6E0;
+    }
+    td:first-child { color: #E6EDF3; font-weight: 500; white-space: nowrap; }
+
+    /* Tool link card */
+    .tool-link { margin-top: 2.5rem; padding: 1.25rem; border: 1px solid #3B414A; border-radius: 4px; }
+    .tool-link a { font-weight: 600; text-decoration: none; border-bottom: 1px solid #3B414A; }
+    .tool-link a:hover { border-bottom-color: #7C8590; }
+    .tool-link p { color: #7C8590; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0; }
+
+    /* Footer */
+    .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #3B414A; }
+    .footer a { color: #7C8590; font-size: 0.85rem; text-decoration: none; border-bottom: 1px solid transparent; }
+    .footer a:hover { border-bottom-color: #7C8590; }
+    .footer span { color: #3B414A; margin: 0 0.5rem; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+  <h1>Context Decay in Long AI Sessions</h1>
+  <p class="meta">March 2026</p>
+  <p class="subtitle">Session tokendynamics and the infrastructure gap in collaborative reasoning</p>
+
+  <p>Every engineer working with AI has experienced the same strange failure mode. The session is going well: ideas connect, code evolves, decisions accumulate. Then, somewhere near the middle of the conversation, something subtle breaks. The model still sounds coherent. It still answers confidently. But a constraint disappears. A design decision from twenty minutes ago vanishes. The reasoning quietly drifts off course.</p>
+
+  <p>Nothing crashed &mdash; the system simply forgot.</p>
+
+  <p>This isn't a bug in intelligence. It's a consequence of bounded memory.</p>
+
+  <p>Donald Knuth documented this phenomenon without naming it. In his analysis of Claude solving an open combinatorics problem (February 2026), after 31 explorations Claude produced a valid construction for odd values &mdash; but on the even case, it couldn't even write correct programs anymore. The model hadn't become less capable. Its context had filled with exploration residue, displacing the constraints it needed to reason correctly.</p>
+
+  <p>Most engineers encounter a milder version daily: a 200-turn coding session at 80% context, $54 spent. The AI starts repeating itself. Suggestions get generic. The context meter shows fullness, not quality.</p>
+
+  <p>Before instrumentation, reaching 85% context meant panic: save everything, brace for the restart tax &mdash; 10 or more turns rebuilding context the model just lost to compaction. Sessions above 80% were abandoned preemptively.</p>
+
+  <h2>What is context decay?</h2>
+
+  <p>Context decay is the gradual degradation of a reasoning session's quality, cost efficiency, and structural coherence over time. Think of a conference room whiteboard that never gets erased &mdash; eventually every new idea is drawn on top of old ones. A fixed-size context window combined with an unbounded session inevitably produces decay.</p>
+
+  <p>It operates on three axes:</p>
+
+  <p><strong>Economic decay.</strong> Every token in the context window gets re-read on every turn. Noise tokens don't just cost money when written &mdash; they cost money every turn they remain. Cache reads account for roughly 80% of session cost.</p>
+
+  <p><strong>Reasoning decay.</strong> When compaction occurs, the model summarizes its own history. Constraints get softened. Decisions lose their rationale. Exploration dead-ends get compressed alongside conclusions, becoming ghost context &mdash; artifacts that influence reasoning without being visible.</p>
+
+  <p><strong>Structural decay.</strong> Sessions drift across project boundaries. Scope creeps. The same project launched from two directories creates split contexts with no cross-visibility.</p>
+
+  <h2>What this looks like in practice</h2>
+
+  <p>With instrumentation showing context utilization and signal quality, an operator at 82% context launched a major architectural task in planning mode, let compaction occur naturally, and resumed at 26% without a single reasoning restart. The operating vector &mdash; the active objective, constraints, and design decisions &mdash; survived compression intact.</p>
+
+  <p>The context window didn't change. The operator's confidence in compaction quality did.</p>
+
+  <p>A session with clean signal at 82% compacts predictably because the context is mostly signal, not noise. A session with degraded signal at 82% is a coin flip. The signal grade makes compaction predictable instead of random &mdash; the same shift that occurred when CI/CD introduced build status indicators. Engineers didn't stop deploying. They stopped deploying blind.</p>
+
+<pre>Uninstrumented session:
+  explore &rarr; drift &rarr; compaction &rarr; restart &rarr; re-explain &rarr; drift
+
+Instrumented session:
+  explore &rarr; signal check &rarr; consolidate &rarr; compact &rarr; continue</pre>
+
+  <h2>The constraint that creates a discipline</h2>
+
+  <p>Software engineering disciplines emerge when a system encounters a hard resource constraint. CPU cycles gave us schedulers. Memory limits gave us allocators. Network bandwidth gave us congestion control.</p>
+
+  <p class="thesis">The context window is the first hard resource constraint in collaborative reasoning.</p>
+
+  <p>Once you recognize this, operational questions appear: How full is the context? How much is noise? What will compaction lose? Is the session still on track? These require infrastructure, not prompting technique.</p>
+
+  <p>The infrastructure that emerges follows a familiar pattern:</p>
+
+<pre>Operator (ideas)
+    &darr; stage
+Vector Staging (classify, measure, prepare)
+    &darr; launch
+LLM Session (reasoning under bounded context)
+    &darr; telemetry
+Session Telemetry (cost per decision, signal grade, drift detection)
+    &darr; feedback
+Operator (adjusts)</pre>
+
+  <p>Engineers recognize this as a closed feedback loop &mdash; the same structure as observability stacks, CI/CD pipelines, and SRE feedback systems.</p>
+
+  <p class="thesis">The LLM is not the system. It is one component inside a control loop. The reasoning stability comes from the infrastructure around it.</p>
+
+  <h2>Cost Per Decision</h2>
+
+  <p>The most revealing metric isn't token count or session cost. It's <span class="highlight">Cost Per Decision</span>: how many dollars it takes to reach each concrete commitment. Most sessions feel expensive, but CPD shows why.</p>
+
+  <p>In one observed session: $54.43 spent, 4 decisions made. $13.61 per decision. Decision density: 1 per 95 turns. The other 94 turns were exploration, clarification, and noise &mdash; all re-read on every subsequent turn.</p>
+
+  <p>Clean sessions have lower CPD because the model converges faster with less noise in the window. The real cost of AI development is not tokens. It's how expensive it is to reach the next decision.</p>
+
+  <h2>Session lifecycle</h2>
+
+  <p>Every session has a natural arc that nobody acknowledges. Operators treat sessions as infinite; context windows are finite. When idea velocity exceeds remaining capacity, ideas get silently dropped &mdash; not rejected, just forgotten.</p>
+
+  <table>
+    <tr><th>Phase</th><th>Context</th><th>Operator mode</th></tr>
+    <tr><td>Orient</td><td>0&ndash;20%</td><td>Load context, set scope</td></tr>
+    <tr><td>Explore</td><td>20&ndash;50%</td><td>Branch freely, investigate</td></tr>
+    <tr><td>Execute</td><td>50&ndash;65%</td><td>Implement chosen approach</td></tr>
+    <tr><td>Consolidate</td><td>65&ndash;80%</td><td>Commit, verify, document</td></tr>
+    <tr><td>Handoff</td><td>80%+</td><td>Save context for next session</td></tr>
+  </table>
+
+  <p>The dangerous transition is between Execute and Consolidate. The operator still has ideas but the window is filling. New ideas displace old constraints. The model sounds confident while silently dropping requirements.</p>
+
+  <h2>Observed results</h2>
+
+  <p>In early use of a prototype implementing these ideas, observed effects include:</p>
+
+  <span class="stat">7.5 million tokens of redundant context removed<em>Automated cleaning &mdash; 241 cycles over 5 hours</em></span>
+
+  <span class="stat">$349 recovered from a single session<em>8,243 progress entries, 824 tangents cleaned in 12 minutes</em></span>
+
+  <span class="stat">3&times; throughput &mdash; same operator, same model<em>Previously $200/day at &lt;30% productivity. With instrumentation: $163/day, multiple features shipped</em></span>
+
+  <span class="stat">Zero reasoning restarts after compaction<em>82% &rarr; 26% context. A multi-file feature designed, implemented, tested, and committed without losing objective</em></span>
+
+  <p>These numbers are from early prototype use. They demonstrate that the process is observable and measurable &mdash; not that specific savings are guaranteed.</p>
+
+  <h2>The vocabulary gap</h2>
+
+  <p>You can't manage what you can't name. Context decay persists partly because its failure modes don't have names.</p>
+
+  <table>
+    <tr><th>Term</th><th>Meaning</th></tr>
+    <tr><td>Re-read tax</td><td>The cumulative cost of re-reading noise on every model invocation</td></tr>
+    <tr><td>Compaction loss</td><td>Constraints and decisions silently dropped during context summarization</td></tr>
+    <tr><td>Vector drift</td><td>Gradual divergence of the session's reasoning from its stated objective</td></tr>
+    <tr><td>Ghost context</td><td>Compacted exploration residue that influences reasoning without being visible</td></tr>
+  </table>
+
+  <p>Each corresponds to a measurable phenomenon in real sessions.</p>
+
+  <h2>The regime transition</h2>
+
+  <p>Most AI users operate in short sessions: 10&ndash;30 turns, $1&ndash;5. In that regime, context decay is invisible. The model occasionally forgets something, the user shrugs, and the session ends before it matters.</p>
+
+  <p>Long sessions &mdash; 100+ turns, $50+ &mdash; surface a different class of problems: compaction survival, reasoning drift, restart tax, decision economics. These are invisible at small scale, just as distributed systems problems are invisible on a single server.</p>
+
+  <p>Small websites didn't need DevOps. Small ML experiments didn't need MLOps. Short AI sessions don't need session infrastructure. But as agentic workflows push session lengths up and costs rise, more developers will cross the threshold where sessions stop being conversations and start behaving like runtime systems.</p>
+
+  <p>Runtime systems always demand monitoring, signals, control loops, and discipline.</p>
+
+  <h2>What this implies</h2>
+
+  <p>Once collaborative reasoning becomes structured, instrumented, and observable, it begins to resemble something familiar to engineers: an operational discipline.</p>
+
+  <table>
+    <tr><th>Constraint</th><th>Discipline</th></tr>
+    <tr><td>CPU cycles</td><td>Scheduling</td></tr>
+    <tr><td>Memory limits</td><td>Memory management</td></tr>
+    <tr><td>Network bandwidth</td><td>Congestion control</td></tr>
+    <tr><td>Context windows</td><td>Session tokendynamics</td></tr>
+  </table>
+
+  <p><span class="highlight">Session tokendynamics</span> is the control of idea flow, compression, and execution pacing inside a bounded context window &mdash; to avoid silent forgetting and minimize restart cost.</p>
+
+  <p>The bounded context window is not a limitation to be worked around. It is the constraint that will define how human-AI collaboration is engineered.</p>
+
+  <div class="tool-link">
+    <a href="https://github.com/ppiankov/contextspectre">ContextSpectre</a>
+    <p>The prototype tools referenced in this essay are open source. They represent one implementation of the ideas described here &mdash; the practice of managing context decay can be applied with or without specific tooling.</p>
+  </div>
+
+  <div class="footer">
+    <a href="https://obstalabs.dev">Obsta Labs</a>
+    <span>/</span>
+    <a href="https://github.com/ppiankov">GitHub</a>
+    <span>/</span>
+    <a href="mailto:hello@obstalabs.dev">Contact</a>
+  </div>
+
+</body>
+</html>
