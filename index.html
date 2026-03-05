@@ -109,9 +109,11 @@
 
   <p>Donald Knuth documented this phenomenon without naming it. In his analysis of Claude solving an open combinatorics problem (February 2026), after 31 explorations Claude produced a valid construction for odd values &mdash; but on the even case, it couldn't even write correct programs anymore. The model hadn't become less capable. Its context had filled with exploration residue, displacing the constraints it needed to reason correctly.</p>
 
-  <p>Most engineers encounter a milder version daily: a 200-turn coding session at 80% context, $54 spent. The AI starts repeating itself. Suggestions get generic. The context meter shows fullness, not quality.</p>
+  <p>Most engineers encounter a milder version daily: a 200-turn coding session at 80% context, $54 spent. The AI starts repeating itself. Suggestions become generic. The context meter shows fullness, not quality.</p>
 
   <p>Before instrumentation, reaching 85% context meant panic: save everything, brace for the restart tax &mdash; 10 or more turns rebuilding context the model just lost to compaction. Sessions above 80% were abandoned preemptively.</p>
+
+  <p>That failure mode has a name: context decay.</p>
 
   <h2>What is context decay?</h2>
 
@@ -161,7 +163,9 @@ Operator (adjusts)</pre>
 
   <p>Engineers recognize this as a closed feedback loop &mdash; the same structure as observability stacks, CI/CD pipelines, and SRE feedback systems.</p>
 
-  <p class="thesis">The LLM is not the system. It is one component inside a control loop. The reasoning stability comes from the infrastructure around it.</p>
+  <p class="thesis">The LLM is not the system.</p>
+
+  <p class="thesis">It is one component inside a control loop. The reasoning stability comes from the infrastructure around it.</p>
 
   <h2>Cost Per Decision</h2>
 
